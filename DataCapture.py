@@ -32,7 +32,7 @@ class DataCapture:
         self.__range_indexes_dict = {}
     
     @clean_data_decorator
-    def add(self, value: int):
+    def add(self, value: int) -> None:
         self.__data.append(value)
 
     """
@@ -47,7 +47,7 @@ class DataCapture:
     theres 13 lower values 
     """
     @clean_data_decorator_second_param
-    def between(self, from_value, to_value):
+    def between(self, from_value: int, to_value: int) -> int:
         if self.__status:
             response = "the firts value passed to the function most be lower than the second one"
             if from_value < to_value:
@@ -56,7 +56,7 @@ class DataCapture:
         return "Cant use this function before calling build_stats method"
     
     """Set minimun and maximun values and sort the data added, enables the less,great,between fucntions"""
-    def build_stats(self):
+    def build_stats(self) -> None:
         self.__data.sort()
         self.__max = max(self.__data)
         self.__min = min(self.__data)
@@ -65,14 +65,14 @@ class DataCapture:
 
     """in case the value is higher than our max we return 0, if not just return the second position of the list asigned to that key on the dict"""
     @clean_data_decorator
-    def greater(self, value: int):
+    def greater(self, value: int) -> int:
         if self.__status:
             return self.__range_indexes_dict[value][1] if value < self.__max else 0
         return "Cant use this function before calling build_stats method"
 
     """return the len of the captured data if the value is greater than our max, other wise return position 0 on list"""
     @clean_data_decorator
-    def less(self, value: int):    
+    def less(self, value: int) -> int:    
         if self.__status:    
             return self.__range_indexes_dict[value][0] if value < self.__max else len(self.__data)
         return "Cant use this function before calling build_stats method"
@@ -82,7 +82,7 @@ class DataCapture:
         index 1: greater values
         index 2: amount of duplicates for this number 
     """
-    def __range_generator(self):
+    def __range_generator(self) -> None:
         for x in range(0, 999):
             if x < self.__min:
                 yield x, [0, len(self.__data), self.__data.count(x)]
@@ -96,7 +96,7 @@ class DataCapture:
             elif x > self.__max:
                 yield x, [len(self.__data), 0, self.__data.count(x)]
     
-    def __set_indexed_dict(self):
+    def __set_indexed_dict(self) -> None:
         range_gen = self.__range_generator()
         while True:
             try:
@@ -106,12 +106,12 @@ class DataCapture:
                 break
     
     """Public methods to show the protected attributes"""
-    def get_data(self):
+    def get_data(self) -> list:
         return self.__data
     
-    def get_min(self):
+    def get_min(self) -> list:
         return self.__min
     
-    def get_max(self):
+    def get_max(self) -> list:
         return self.__max
     
