@@ -58,7 +58,7 @@ class DataCapture:
             return response
         return "Cant use this function before calling build_stats method"
     
-    """Set minimun and maximun values and sort the data added, enables the less,great,between fucntions"""
+    
     def build_stats(self) -> None:
         '''
         Build a dictionary of indexes to manage the notation o(1) on later functions, this functions has a o(n) 
