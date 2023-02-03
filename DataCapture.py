@@ -35,19 +35,22 @@ class DataCapture:
     def add(self, value: int) -> None:
         self.__data.append(value)
 
-    """
-    return the amount of values using this logic
-    x2 + amount of x2 on collection
-    minus x1 less values 
-    we take the less values from the bigger one and sum the amount o repetitions he has on the list
-    after that remove the less values of the lower one so we keep just a range between the both
-    [2,2,1]
-    [11,0,2]
-    11 + 2 - 2 = 11
-    theres 13 lower values 
-    """
     @clean_data_decorator_second_param
     def between(self, from_value: int, to_value: int) -> int:
+        '''
+        return the amount of values using this logic
+        x2 + amount of x2 on collection
+        minus x1 less values 
+        we take the less values from the bigger one and sum the amount o repetitions he has on the list
+        after that remove the less values of the lower one so we keep just a range between the both
+        [2,2,1]
+        [11,0,2]
+        11 + 2 - 2 = 11
+        theres 11 lower values 
+        :param from_value: lower value to check
+        :param to_value: highest value to check
+        :return: integer with the amount of values between the range (from_value, to_value)
+        '''
         if self.__status:
             response = "the firts value passed to the function most be lower than the second one"
             if from_value < to_value:
@@ -57,32 +60,47 @@ class DataCapture:
     
     """Set minimun and maximun values and sort the data added, enables the less,great,between fucntions"""
     def build_stats(self) -> None:
+        '''
+        Build a dictionary of indexes to manage the notation o(1) on later functions, this functions has a o(n) 
+        sets the min and max values of the data and enables less,greater,between function when called
+        '''
         self.__data.sort()
         self.__max = max(self.__data)
         self.__min = min(self.__data)
         self.__set_indexed_dict()
         self.__status = True
 
-    """in case the value is higher than our max we return 0, if not just return the second position of the list asigned to that key on the dict"""
     @clean_data_decorator
     def greater(self, value: int) -> int:
+        '''
+        check for how many grater values are inside the data o(1).
+        in case the value is higher than our max we return 0, if not just return the second position of the list asigned to that key on the dict.
+        :param: value: positive integer between (0, 999)
+        :return: integer with how many values are greater.
+        '''
         if self.__status:
             return self.__range_indexes_dict[value][1] if value < self.__max else 0
         return "Cant use this function before calling build_stats method"
 
-    """return the len of the captured data if the value is greater than our max, other wise return position 0 on list"""
     @clean_data_decorator
     def less(self, value: int) -> int:    
+        '''
+        check for less values inside the position o(1).
+        :param: value: positive integer between (0, 999)
+        :return:  int with the len of the captured data if the value is greater than our max, other wise return position 0 on list.
+        '''
         if self.__status:    
             return self.__range_indexes_dict[value][0] if value < self.__max else len(self.__data)
         return "Cant use this function before calling build_stats method"
 
-    """Creates a list object with the next detail
+    
+    def __range_generator(self) -> None:
+        """
+        Creates a list object with the next detail
         index 0: less values
         index 1: greater values
         index 2: amount of duplicates for this number 
-    """
-    def __range_generator(self) -> None:
+        """ 
         for x in range(0, 999):
             if x < self.__min:
                 yield x, [0, len(self.__data), self.__data.count(x)]
@@ -97,6 +115,10 @@ class DataCapture:
                 yield x, [len(self.__data), 0, self.__data.count(x)]
     
     def __set_indexed_dict(self) -> None:
+        '''
+        call generator and compute the indexes with
+        less,greater,count data
+        '''
         range_gen = self.__range_generator()
         while True:
             try:
